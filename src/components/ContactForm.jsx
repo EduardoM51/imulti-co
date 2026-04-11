@@ -40,7 +40,7 @@ export default function ContactForm() {
                 {enviado ? (
                     <div className="text-center py-10 bg-green-50 rounded-2xl">
                         <p className="text-green-700 font-bold text-xl">¡Mensaje recibido! ✨</p>
-                        <p className="text-green-600">iMulti Co te contactará muy pronto.</p>
+                        <p className="text-green-600">Picnic Date te contactará muy pronto.</p>
                     </div>
                 ) : (
                     <form onSubmit={handleSubmit} className="space-y-6">
