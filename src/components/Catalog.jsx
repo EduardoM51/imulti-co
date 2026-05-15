@@ -3,61 +3,67 @@ import { supabase } from '../lib/supabaseClient';
 
 export default function Catalog() {
     const [servicios, setServicios] = useState([]);
-    const [cargando, setCargando] = useState(true);
+    const [servicioAbierto, setServicioAbierto] = useState(null); // Controla la ventana independiente
 
     useEffect(() => {
-        async function obtenerServicios() {
-            // 1. Pedimos los datos a Supabase
-            const { data, error } = await supabase
-                .from('servicios')
-                .select('*')
-                .order('created_at', { ascending: false });
-
-            if (error) {
-                console.error("Error al cargar:", error);
-            } else {
-                setServicios(data);
-            }
-            setCargando(false);
-        }
-
-        obtenerServicios();
+        const fetchServicios = async () => {
+            const { data } = await supabase.from('servicios').select('*');
+            setServicios(data || []);
+        };
+        fetchServicios();
     }, []);
-
-    if (cargando) return <div className="text-center py-20">Cargando experiencias...</div>;
 
     return (
         <section id="servicios" className="py-20 px-6 max-w-7xl mx-auto">
-            <h2 className="text-4xl font-serif text-center mb-12 text-stone-900">
-                Nuestras Experiencias
-            </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-                {servicios.map((item) => (
-                    <div key={item.id} className="group bg-white rounded-[2rem] overflow-hidden shadow-sm hover:shadow-xl transition-all border border-stone-100">
-                        {/* Imagen */}
-                        <div className="h-72 overflow-hidden">
-                            <img
-                                src={item.imagen_principal}
-                                alt={item.nombre}
-                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                            />
-                        </div>
-
-                        {/* Contenido */}
-                        <div className="p-8">
-                            <h3 className="text-2xl font-bold text-stone-900 mb-2">{item.nombre}</h3>
-                            <p className="text-stone-500 text-sm mb-6 line-clamp-2">{item.descripcion}</p>
-                            <div className="flex justify-between items-center">
-                                <span className="text-rose-600 font-bold text-xl">${item.precio_base}</span>
-                                <a href="#contacto" className="text-stone-900 font-semibold border-b-2 border-rose-500 pb-1 hover:text-rose-500 transition-colors">
-                                    Reservar
-                                </a>
-                            </div>
-                        </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {servicios.map((servicio) => (
+                    <div
+                        key={servicio.id}
+                        className="cursor-pointer group border rounded-3xl p-4 hover:shadow-xl transition-all"
+                        onClick={() => setServicioAbierto(servicio)} // Al hacer clic, se guarda el servicio
+                    >
+                        <img src={servicio.imagen_principal} className="rounded-2xl h-48 w-full object-cover" />
+                        <h3 className="text-xl font-bold mt-4">{servicio.nombre}</h3>
+                        <p className="text-rose-600 font-bold">${servicio.precio_base}</p>
+                        <button className="mt-2 text-sm text-stone-400">Hacer clic para ver detalles</button>
                     </div>
                 ))}
             </div>
+
+            {/* VENTANA INDEPENDIENTE (MODAL) */}
+            {servicioAbierto && (
+                <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-[100] flex items-center justify-center p-4">
+                    <div className="bg-white rounded-[2.5rem] max-w-2xl w-full max-h-[90vh] overflow-y-auto p-8 relative shadow-2xl">
+                        {/* Botón Cerrar */}
+                        <button
+                            onClick={() => setServicioAbierto(null)}
+                            className="absolute top-6 right-6 text-2xl text-stone-400 hover:text-black"
+                        >
+                            ✕
+                        </button>
+
+                        <img src={servicioAbierto.imagen_principal} className="w-full h-64 object-cover rounded-3xl mb-6" />
+
+                        <h2 className="text-4xl font-serif mb-2">{servicioAbierto.nombre}</h2>
+                        <p className="text-2xl text-rose-600 font-bold mb-6">${servicioAbierto.precio_base}</p>
+
+                        <div className="prose text-stone-600">
+                            <h4 className="font-bold text-black uppercase tracking-widest text-xs mb-2">Descripción completa:</h4>
+                            <p className="leading-relaxed">
+                                {servicioAbierto.descripcion_detallada || "Pronto tendremos más detalles de este servicio."}
+                            </p>
+                        </div>
+
+                        <a
+                            href="#contacto"
+                            onClick={() => setServicioAbierto(null)}
+                            className="mt-10 block text-center bg-stone-900 text-white py-4 rounded-2xl font-bold hover:bg-rose-600 transition-all"
+                        >
+                            Consultar disponibilidad
+                        </a>
+                    </div>
+                </div>
+            )}
         </section>
     );
 }

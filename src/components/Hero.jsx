@@ -11,10 +11,10 @@ export default function Hero() {
             </div>
             <div className="relative z-10 text-center px-6">
                 <span className="text-rose-500 font-bold tracking-[0.4em] uppercase text-sm mb-4 block">
-                    Catering & Picnic de Lujo
+                    Picnic & Decoracion & Citas Romanticas
                 </span>
                 <h1 className="text-6xl md:text-8xl font-serif text-white mb-6 tracking-tighter">
-                    Momentos <span className="italic text-stone-300">Inolvidables</span>
+                    Regala Experiencias,<span className="italic text-stone-200">  Esas Nunca se Olvidan</span>
                 </h1>
                 <div className="flex gap-4 justify-center mt-10">
                     <a href="#servicios" className="bg-rose-600 text-white px-10 py-4 rounded-full font-bold">Ver Catálogo</a>

@@ -39,7 +39,7 @@ function App() {
                     </div>
 
                     <div className="text-center md:text-right">
-                        <p className="text-sm">© {new Date().getFullYear()} Picnic Date. Eventos Premium.</p>
+                        <p className="text-sm">© {new Date().getFullYear()} Picnic Date.</p>
                         <p className="text-xs mt-1 uppercase tracking-widest opacity-50">
                             Desarrollado por Jesus Morales | MVP v1.0
                         </p>
